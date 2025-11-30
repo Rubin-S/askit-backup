@@ -936,7 +936,7 @@ router.get(
     });
 
     res.cookie("access_token", token, {
-      httpOnly: true,
+      httpOnly: true, // Security best practice
       secure: true, // Required for SameSite: None
       sameSite: "none", // Required for cross-site
       maxAge: 7 * 24 * 60 * 60 * 1000,
