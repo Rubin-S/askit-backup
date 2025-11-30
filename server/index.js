@@ -13,6 +13,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:3000", // Local dev
   "https://askit-connect.vercel.app", // ✅ Correct Vercel URL
+  "https://askit-backup.vercel.app", // Backup Vercel URL
 ];
 
 // ✅ Proper CORS configuration
