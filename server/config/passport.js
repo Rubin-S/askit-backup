@@ -16,6 +16,12 @@ passport.use(
           (process.env.NODE_ENV === "production"
             ? "https://askit-backup.onrender.com"
             : "http://localhost:5000");
+
+        // Fix common typo: .app -> .com for onrender domains
+        if (url.includes("onrender.app")) {
+          url = url.replace("onrender.app", "onrender.com");
+        }
+
         if (url.endsWith("/")) {
           url = url.slice(0, -1);
         }
