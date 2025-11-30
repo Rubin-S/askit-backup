@@ -10,26 +10,29 @@ import session from "express-session";
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:3000", // Local dev
-  "https://askit-connect.vercel.app", // ✅ Correct Vercel URL
-  "https://askit-backup.vercel.app", // Backup Vercel URL
-];
-
 // ✅ Proper CORS configuration
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  })
-);
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "https://askit-backup.vercel.app",
+      "https://askit-backup-rubin-s-projects.vercel.app",
+      /\.vercel\.app$/,
+    ];
+
+    if (!origin) return callback(null, true); // mobile apps, curl, etc.
+
+    if (allowedOrigins.some(o =>
+      typeof o === "string" ? o === origin : o.test(origin)
+    )) {
+      callback(null, true);
+    } else {
+      console.log("❌ Blocked by CORS:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -42,8 +45,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true, // Always true for cross-site
-      sameSite: "none", // Required for cross-site (Vercel -> Render)
+      secure: true, // required on Render
+      httpOnly: false, // allow frontend to read cookie
+      sameSite: "none", // required for cross-site cookies
       maxAge: 24 * 60 * 60 * 1000,
     },
   })
