@@ -9,7 +9,11 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `${process.env.SERVER_URL}/google/callback`,
+      callbackURL: `${process.env.SERVER_URL ||
+        (process.env.NODE_ENV === "production"
+          ? "https://askit-backup.onrender.com"
+          : "http://localhost:5000")
+        }/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
