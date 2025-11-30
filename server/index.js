@@ -63,6 +63,17 @@ app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
+app.get("/debug-cookies", (req, res) => {
+  res.json({
+    cookies: req.cookies,
+    signedCookies: req.signedCookies,
+    headers: req.headers.cookie,
+    secure: req.secure,
+    protocol: req.protocol,
+    trustProxy: app.get("trust proxy"),
+  });
+});
+
 app.use("/", router);
 
 export default app;
