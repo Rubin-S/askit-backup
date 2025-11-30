@@ -4,16 +4,23 @@ import mongoose from "mongoose";
 import { User } from "../models/user-model.js";
 import dotenv from "dotenv";
 dotenv.config();
+
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `${process.env.SERVER_URL ||
-        (process.env.NODE_ENV === "production"
-          ? "https://askit-backup.onrender.com"
-          : "http://localhost:5000")
-        }/google/callback`,
+      callbackURL: (() => {
+        let url =
+          process.env.SERVER_URL ||
+          (process.env.NODE_ENV === "production"
+            ? "https://askit-backup.onrender.com"
+            : "http://localhost:5000");
+        if (url.endsWith("/")) {
+          url = url.slice(0, -1);
+        }
+        return `${url}/google/callback`;
+      })(),
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
