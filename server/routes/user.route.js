@@ -28,8 +28,7 @@ const getCoordinates = async (address) => {
     /* REDIS check for query location(key) */
 
     const response = await axios.get(
-      `https://us1.locationiq.com/v1/search?key=${
-        process.env.LOCATIONIQ_API_KEY
+      `https://us1.locationiq.com/v1/search?key=${process.env.LOCATIONIQ_API_KEY
       }&q=${encodeURIComponent(
         address
       )}&limit=1&normalizeaddress=1&countrycodes=IN&format=json`
@@ -586,8 +585,8 @@ const replyToComment = async (req, res) => {
       videoId,
       text,
       user,
-      parentId:new mongoose.Types.ObjectId(parentId), // This is the ID of the comment being replied to
-      commentedBy:new mongoose.Types.ObjectId(commentedBy),
+      parentId: new mongoose.Types.ObjectId(parentId), // This is the ID of the comment being replied to
+      commentedBy: new mongoose.Types.ObjectId(commentedBy),
       createdAt: new Date(),
     });
     await reply.save();
@@ -938,8 +937,8 @@ router.get(
 
     res.cookie("access_token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Lax",
+      secure: true, // Required for SameSite: None
+      sameSite: "none", // Required for cross-site
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 

@@ -34,12 +34,18 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+app.set("trust proxy", 1); // Required for secure cookies on Render
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }, // use true in production with HTTPS
+    cookie: {
+      secure: true, // Always true for cross-site
+      sameSite: "none", // Required for cross-site (Vercel -> Render)
+      maxAge: 24 * 60 * 60 * 1000,
+    },
   })
 );
 
